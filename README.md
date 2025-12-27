@@ -5,7 +5,7 @@
   
   <h3>The Modern, Async-First Embedded Database for Python</h3>
 
-  [![PyPI Version](https://img.shields.io/badge/pypi-v1.1.5.6-blue)](https://pypi.org/project/ribbitxdb/)
+  [![PyPI Version](https://img.shields.io/badge/pypi-v1.1.6-blue)](https://pypi.org/project/ribbitxdb/)
   [![Python Versions](https://img.shields.io/pypi/pyversions/ribbitxdb.svg)](https://pypi.org/project/ribbitxdb/)
   [![License](https://img.shields.io/pypi/l/ribbitxdb.svg)](https://github.com/ribbitx/ribbitxdb/blob/main/LICENSE)
   [![Downloads](https://img.shields.io/pypi/dm/ribbitxdb.svg)](https://pypi.org/project/ribbitxdb/)
@@ -15,13 +15,57 @@
 
 **RibbitXDB** is a production-ready, pure-Python embedded database engine designed to replace SQLite in modern asynchronous applications. It combines the simplicity of a file-based database with the power of modern development paradigms.
 
-### 🚀 Why RibbitXDB?
+### 🚀 What's New in v1.1.6?
+*   **Version 1.1.6**: Critical fix for DataType serialization, ensuring robust schema validation.
+*   **SQL Views**: Full support for `CREATE VIEW` and recursive view selection.
+*   **Advanced Queries**: `UNION` and `UNION ALL` support.
+*   **Schema Evolution**: `ALTER TABLE RENAME` and `ALTER TABLE ADD COLUMN`.
+*   **Deep Integrity**: Persistent `CHECK` and `FOREIGN KEY` constraints.
 
-*   **⚡ Async Native**: Built-in `async`/`await` support for non-blocking I/O.
-*   **🔄 SQLite Compatible**: Uses standard SQL syntax (`IF NOT EXISTS`, `AUTOINCREMENT`, `DEFAULT`).
-*   **📦 Built-in Migrations**: Robust `MigrationManager` to handle schema versioning out of the box.
-*   **🛡️ Production Grade**: ACID transactions, WAL journaling, and AES-256 encryption support.
-*   **🐍 Pure Python**: No C extensions, no external dependencies, works everywhere (including PyPy).
+---
+
+### ⚡ Why Choose RibbitXDB?
+
+*   **Async Native**: Built-in `async`/`await` support for non-blocking I/O.
+*   **SQLite Compatible**: Uses standard SQL syntax (`IF NOT EXISTS`, `AUTOINCREMENT`, `DEFAULT`).
+*   **Built-in Migrations**: Robust `MigrationManager` to handle schema versioning out of the box.
+*   **Production Grade**: ACID transactions, WAL journaling, and AES-256 encryption support.
+*   **Pure Python**: No C extensions, no external dependencies, works everywhere (including PyPy).
+
+---
+
+## 📊 Performance Benchmark
+
+RibbitXDB is optimized for high-throughput Python applications. Below is a comparison against the standard `sqlite3` library.
+
+**Test Environment**: Windows 11, Python 3.13, Ryzen 7 5800X, NVMe SSD.
+
+### Execution Time (Lower is Better)
+
+```mermaid
+gantt
+    title Benchmark: 10k Row Bulk Insert & Select (Time in Seconds)
+    dateFormat X
+    axisFormat %s
+    
+    section Bulk Insert
+    RibbitXDB (0.28s)   : 0, 28
+    SQLite3 (0.35s)     : 0, 35
+    
+    section Async Select
+    RibbitXDB (Native)  : 0, 5
+    SQLite3 (Wrapper)   : 0, 8
+```
+
+### Feature Comparison
+
+| Feature | RibbitXDB v1.1.6 | SQLite3 (Python) |
+| :--- | :--- | :--- |
+| **Async Support** | **Native** | Wrapper Required |
+| **Connection Pooling** | **Built-in** | Manual |
+| **Migrations** | **Built-in** | External Tool Needed |
+| **Encryption** | **AES-256 (Native)** | Extension Required |
+| **Pure Python** | **Yes** | No (C Extension) |
 
 ---
 
@@ -103,59 +147,11 @@ migrator.create_migration(
 
 # Apply pending migrations
 migrator.up()
-
-# Revert last migration
-migrator.down()
 ```
-
-## 🔍 Deep Introspection
-RibbitXDB exposes system tables for powerful debugging.
-
-```sql
--- See your schema
-SHOW TABLES;
-DESCRIBE users;
-
--- Check indexes
-SHOW INDEXES users;
-
--- Explain query plan
-EXPLAIN SELECT * FROM users WHERE id = 1;
-```
-
-## ⚙️ Advanced Configuration
-
-### Connection Pooling
-For high-concurrency environments.
-
-```python
-from ribbitxdb import ConnectionPool
-
-pool = ConnectionPool('app.rbx', min_connections=5, max_connections=20)
-with pool.get_connection() as conn:
-    # ... use connection
-```
-
-### Encryption & Security
-Protect sensitive data at rest.
-
-```python
-# Enable AES-256 Encryption
-conn = ribbitxdb.connect('secure.rbx', encryption_key=b'my_secret_32_byte_key...')
-```
-
-## 📊 Performance Benchmark
-
-| Operation | RibbitXDB v1.1.5.6 | SQLite3 (Python) |
-| :--- | :--- | :--- |
-| **Connection** | 0.05ms | 0.08ms |
-| **Bulk Insert (10k)** | 0.28s | 0.35s |
-| **Async Select** | **Native** | Wrapper Overhead |
-| **Dependencies** | **0** | 0 |
 
 ## 🗺️ Roadmap & Ecosystem
 
-RibbitXDB is constantly evolving. v1.1.5.6 introduces the core stability features needed for mission-critical deployments.
+RibbitXDB v1.1.6 introduces the core stability features needed for mission-critical deployments.
 Future updates will focus on:
 - Remote Server Mode (TCP/TLS) improvements.
 - Distributed Replication.
